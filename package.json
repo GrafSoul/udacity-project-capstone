@@ -1,0 +1,35 @@
+{
+  "name": "udacity-project-capstone",
+  "version": "1.0.0",
+  "description": "Project: Front End Developer Capstone - Travel App",
+  "main": "src/server/index.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GrafSoul/udacity-project-capstone.git"
+  },
+  "keywords": [
+    "javascript",
+    "html",
+    "css",
+    "travel",
+    "planer",
+    "app"
+  ],
+  "author": "Dmitriy Zatulovskiy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GrafSoul/udacity-project-capstone/issues"
+  },
+  "homepage": "https://github.com/GrafSoul/udacity-project-capstone#readme",
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-runtime": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "babel-loader": "^8.1.0",
+    "eslint": "^7.0.0",
+    "jest": "^26.0.1"
+  }
+}
