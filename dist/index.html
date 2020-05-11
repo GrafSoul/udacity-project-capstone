@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Travel Planer</title></head><body><header><div class="logo">Travel Planer</div></header><main><section><form action=""><input> <input type="date" name="" id=""> <input type="button" value="Create"></form></section><section>Result</section><section>Result</section></main><footer><p class="copyright">© Travel Planer | 2020 | Created by Dmitriy Zatulovskiy | Web API used</p></footer><script>// Check that service workers are supported
+        if ('serviceWorker' in navigator) {
+            // Use the window load event to keep the page load performant
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }</script><script src="main.js"></script></body></html>

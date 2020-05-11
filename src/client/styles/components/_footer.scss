@@ -1,0 +1,27 @@
+/*
+* Footer block styles.
+*/
+
+footer {
+    display: flex;
+    justify-content: center;
+    padding: 30px 40px;
+    border-top: 1px solid $color-pd;
+
+    .copyright {
+        color: $color-sl;
+        font-size: 0.8em;
+        text-align: center;
+
+        a {
+            color: $color-s;
+            text-decoration: none;
+            
+            &:hover {
+                text-decoration: underline;  
+            }
+        }
+
+
+    }
+}

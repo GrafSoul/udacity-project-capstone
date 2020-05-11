@@ -1,0 +1,20 @@
+/*
+* Basic styles.
+*/
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 320px;
+    font: 16px $font-family;
+    background: $color-pd url('../images/bg_news.jpg') center center no-repeat;
+}
+
+main {
+    flex: 2;
+}
+
+section {
+    max-width: 800px;
+    margin: 0 auto;
+}
