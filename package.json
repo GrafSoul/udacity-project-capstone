@@ -4,9 +4,11 @@
   "description": "Project: Front End Developer Capstone - Travel App",
   "main": "src/server/index.js",
   "scripts": {
-    "dev": "webpack-dev-server --config webpack.config/webpack.dev.js --open",
-    "prod": "webpack --config webpack.config/webpack.prod.js",
-    "start": "npm run prod && node src/server/index.js",
+    "wp-server": "webpack-dev-server --config webpack.config/webpack.dev.js --open",
+    "ex-server": "node src/server/index.js",
+    "build": "webpack --config webpack.config/webpack.prod.js",
+    "start": "npm run build && npm run ex-server",
+    "dev": "npm-run-all -p -r wp-server ex-server",
     "test": "jest --coverage"
   },
   "repository": {
@@ -38,9 +40,11 @@
     "eslint": "^7.0.0",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
+    "imagemin-webpack-plugin": "^2.4.2",
     "jest": "^26.0.1",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
+    "npm-run-all": "^4.1.5",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.2.1",

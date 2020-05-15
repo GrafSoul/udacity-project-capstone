@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
 
 module.exports = {
     entry: './src/client/index.js',
@@ -40,8 +41,10 @@ module.exports = {
             filename: './index.html', 
         }),
         new CopyWebpackPlugin([
-            {from: './src/client/images/', to: 'images'}
+            {from: './src/client/images/', to: 'images'},
+            {from: './src/client/media/', to: 'media'}
         ]),
+        new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
         new CleanWebpackPlugin({
             // Simulate the removal of files
             dry: true,

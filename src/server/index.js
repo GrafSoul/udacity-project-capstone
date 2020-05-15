@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use strict';
 /**
 * @description Connecting Express, Middleware and other dependences.
@@ -10,9 +11,19 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 /**
-* @description Setup empty JS object to act as endpoint for all routes.
+* @description Setup JS object for API Data.
 */
-// let projectData = {};
+const apiData = { 
+    geoLogin: process.env.API_GEO_LOGIN,
+    weatherKey: process.env.API_WEATHER_KEY, 
+    pixabayKey: process.env.API_PIXABAY_KEY 
+};
+
+/**
+* @description Setup JS array for Project Data.
+*/
+let projectData = [];
+
 
 /**
 * @description Creating an instance of the app.
@@ -44,10 +55,24 @@ app.get('/', function (req, res) {
 });
 
 /**
-* @description 
+* @description Send API Data.
 */
-app.post('/get', (request, response) => {
+app.get('/apidata', function (request, response) {
+    response.send(apiData);
+});
 
+/**
+* @description Send projectData.
+*/
+app.get('/get', function (request, response) {
+    response.send(projectData);
+});
+
+/**
+* @description Add a new entry to projectData.
+*/
+app.post('/set', function (request, response) {
+    projectData = request.body;
 });
 
 /**
@@ -58,8 +83,9 @@ app.listen(port, listening);
 
 function listening() {
     console.log('*************************************');
-    console.log(` Your API id is: ${process.env.API_ID}`);
-    console.log(` Your API key is: ${process.env.API_KEY}`);
+    console.log(` Your Login in Geoname is: ${apiData.geoLogin}`);
+    console.log(` Your API Key WeatherBit is: ${apiData.weatherKey}`);
+    console.log(` Your API Key Pixabay is: ${apiData.pixabayKey}`);
     console.log(' Server started Successfully!');
     console.log(` Running on - http://localhost:${port}'`);
     console.log('=====================================');
