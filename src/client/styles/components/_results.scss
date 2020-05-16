@@ -2,6 +2,94 @@
 * Result block styles.
 */
 
+/* Modal window */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    overflow: hidden;
+    outline: 0;
+}
+
+.modal.active {
+    display: block;
+}
+
+.modal-curtain {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(30, 14, 41, 0.6);
+}
+
+.modal-content {
+    padding: 30px;
+    max-width: 1100px;
+    border-radius: 8px;
+    background-color: rgb(112, 81, 129);
+    border: 1px solid rgba(154,92,134,1);
+    box-shadow: 3px 4px 10px 3px rgba(0,0,0,0.2);
+    z-index: 200;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-content .question {
+    margin-bottom: 30px;
+    font-size: 1.2em;
+    font-weight: 400;
+    color: rgb(230, 200, 221);
+}
+
+.modal-content .btn-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content .btn-group .btn {
+    display: inline-block;
+    padding: 6px 20px;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 8px;
+    margin: 0 10px;
+    opacity: 1;
+    cursor: pointer;
+    box-shadow: 3px 3px 8px 2px rgba(0,0,0,0.25);
+    border: 1px solid rgba(154,92,134,1);
+    transition: all 0.3s ease;
+}
+
+.modal-content .btn-group .btn-delete {
+    background-color: rgb(133, 62, 103);
+}
+
+.modal-content .btn-group .btn-delete:hover {
+    opacity: 0.9;
+    background-color: rgb(151, 72, 118);
+    box-shadow: 1px 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.modal-content .btn-group .btn-cancel {
+    background-color: rgb(126, 98, 121);
+}
+
+.modal-content .btn-group .btn-cancel:hover {
+    opacity: 0.9;
+    background-color: rgb(167, 131, 158);
+    box-shadow: 1px 1px 1px 2px rgba(0,0,0,0.1);
+}
+
 /* Preloader - https://loading.io/css/ */
 .lds-default {
     display: inline-block;

@@ -25,29 +25,41 @@
     
     <main>
         <section>
+            <p class="error"></p>
             <form onsubmit="return false;">
                 <label for="city">My trip to:</label>
                 <input id="city" type="text" name="city" >
                 <label for="date">Departing:</label>
                 <input id="date" type="date" name="date" >
-                <button id="save" type="submit" name="save">save trip</button>
-                <button id="remove" type="reset" name="remove">remove trip</button>
+                <button id="get" type="submit" name="get">get trip</button>
+                <button id="reset" type="reset" name="reset">reset</button>
             </form>
         </section>
-
         <section>
-            <div class="result"></div>
+            <div id="list-trip"></div>
         </section>
-
-        <section>
-            <div class="list"></div>
-        </section>
-
     </main>
 
     <footer>
        <p class="copyright">© Travel Planer | 2020 | Created by Dmitriy Zatulovskiy | Web API used</p> 
     </footer>
+
+    <div class="modal">
+        <div id="modal-content" class="modal-content">
+            
+            <div id="result-trip"></div>
+
+            <div class="question-delete">
+                <p class="question">Are you sure you want to delete the entry?</p>
+                <div class="btn-group">
+                    <span class="btn btn-delete">Delete</span>
+                    <span class="btn btn-cancel">Сancel</span>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-curtain"></div>
+    </div>
 
     <!-- <script>
         // Check that service workers are supported

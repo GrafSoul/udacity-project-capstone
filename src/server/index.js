@@ -76,6 +76,14 @@ app.post('/set', function (request, response) {
 });
 
 /**
+* @description Add a new variant projectData.
+*/
+app.post('/update', function (request, response) {
+    projectData = [];
+    projectData = request.body;
+});
+
+/**
 * @description Setup Server.
 */
 const port = process.env.NODE_ENV === 'development' ? 3030 : process.env.PORT ;
@@ -84,8 +92,8 @@ app.listen(port, listening);
 function listening() {
     console.log('*************************************');
     console.log(` Your Login in Geoname is: ${apiData.geoLogin}`);
-    console.log(` Your API Key WeatherBit is: ${apiData.weatherKey}`);
-    console.log(` Your API Key Pixabay is: ${apiData.pixabayKey}`);
+    console.log(` Your API Key WeatherBit is:\n ${apiData.weatherKey}`);
+    console.log(` Your API Key Pixabay is:\n ${apiData.pixabayKey}`);
     console.log(' Server started Successfully!');
     console.log(` Running on - http://localhost:${port}'`);
     console.log('=====================================');

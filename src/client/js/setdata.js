@@ -1,3 +1,4 @@
+'use strict';
 /**
 * @description Function for sending data to the server.
 * @param {string} url - link for the server router.

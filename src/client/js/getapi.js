@@ -1,3 +1,4 @@
+'use strict';
 /**
 * @description Function for getting API data from the server and various services.
 * @param {string} url - link to the Web API server.
@@ -6,7 +7,7 @@
 const getAPIData = async (url) => {
     const res = await fetch(url);
     try {  
-        let data = await res.json();
+        let data = await res.json();        
         return data;
     } catch(error) {console.log('Error API Data:', error);}
 };

@@ -1,3 +1,4 @@
+'use strict';
 /**
 * @description Function for getting the maximum and minimum temperature for 16 days.
 * @param {array} data - An array of objects with data about the temperature.
@@ -31,11 +32,12 @@ const dataToString = (data, name) => {
 * @returns {string} - a formatted string with date.
 */
 const msToDate = () => {
-    let day = new Date().getDate();
+    let date = new Date();
+    let day = date.getDate();
     let numberDay = day > 10 ? day : `0${day}`;
-    let mounth = new Date().getMonth() + 1;
+    let mounth = date.getMonth() + 1;
     let numberMounth = mounth > 10 ? mounth : `0${mounth}`;
-    return `${new Date().getFullYear()}/${numberMounth}/${numberDay}`;
+    return `${date.getFullYear()}/${numberMounth}/${numberDay}`;
 };
 
 /**
