@@ -3,22 +3,32 @@
 */
 
 /* Colors */
-$color-p: rgb(22, 77, 100);
-$color-pl: rgb(92, 145, 157);
-$color-pd: rgb(0, 36, 53);
+$color-p: rgb(14, 120, 187);
+$color-pl: rgb(56, 180, 255);
+$color-pd: rgb(2, 80, 129);
 
-$color-s: rgb(158, 158, 158);
-$color-sl: rgb(207, 207, 207);
-$color-sd: rgb(112, 112, 112);
+$color-s: rgb(59, 182, 2);
+$color-sl: rgb(118, 240, 114);
+$color-sd: rgb(44, 138, 0);
 
 $color-w: rgb(255, 255, 255);
 $color-b: rgb(0, 0, 0);
 
-$color-e: rgb(128, 0, 0,);
+$color-g: rgb(122, 122, 122);
+$color-gl: rgb(202, 202, 202);
+$color-gd: rgb(58, 58, 58);
 
-$color-bg: rgba(255, 255, 255, 0.6);
-$color-bgl: rgba(255, 255, 255, 0.8);
-$color-bgd: rgba(255, 255, 255, 0.3);
+$color-e: rgb(189, 0, 0);
+$color-r: rgb(189, 0, 0);
+$color-rl: rgb(243, 3, 3);
+
+$color-bg: rgba(0, 0, 0, 0.4);
+$color-bgl: rgba(0, 0, 0, 0.2);
+$color-bgd: rgba(0, 0, 0, 0.6);
+
+$color-bgw: rgba(255, 255, 255, 0.6);
+$color-bgwl: rgba(255, 255, 255, 0.3);
+$color-bgwd: rgba(255, 255, 255, 0.8);
 
 /* Fonts */
-$font-family: 'Roboto', sans-serif;
+$font-family: 'Open Sans', Arial, Helvetica, sans-serif;

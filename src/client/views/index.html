@@ -15,37 +15,58 @@
     <meta name="application-name" content="Travel Planer"/>
     <meta name="msapplication-TileColor" content="#FFFFFF" />
     <meta name="msapplication-TileImage" content="images/mstile-144x144.png" />
-
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header>
-        <div class="logo">Travel Planer</div>
+        <h1 class="logo"><strong>[TP]</strong> Travel Planer</h1>
     </header>
-    
+
     <main>
-        <section>
-            <p class="error"></p>
-            <form onsubmit="return false;">
-                <label for="city">My trip to:</label>
-                <input id="city" type="text" name="city" >
-                <label for="date">Departing:</label>
-                <input id="date" type="date" name="date" >
-                <button id="get" type="submit" name="get">get trip</button>
-                <button id="reset" type="reset" name="reset">reset</button>
-            </form>
-        </section>
-        <section>
-            <div id="list-trip"></div>
-        </section>
+        <div class="content">
+            <section>
+                <form onsubmit="return false;">
+                    <p class="error"></p>
+                    <div class="form-fields">
+                        <label for="city">My Trip to:</label>
+                        <input id="city" type="text" name="city" class="city" autofocus placeholder="Enter city">
+    
+                        <label for="date">Departing:</label>
+                        <input id="date" type="date" name="date" class="date">
+                    </div>
+                    <div class="btn-group">
+                        <button id="get" type="submit" name="get" class="btn get">Get Trip</button>
+                        <button id="reset" type="reset" name="reset" class="btn reset">Reset</button>
+                    </div>
+                </form>
+            </section>
+            <section>
+                <div id="list-trip"></div>
+            </section>
+        </div>
+
     </main>
 
     <footer>
-       <p class="copyright">© Travel Planer | 2020 | Created by Dmitriy Zatulovskiy | Web API used</p> 
+        <p class="copyright">© Travel Planer | 2020 | Created by Dmitriy Zatulovskiy | Used Web API - 
+            <a href="https://www.geonames.org/" target="_blank">Geonames</a>
+            , <a href="https://www.weatherbit.io/api" target="_blank">WeatherBit</a>
+            , <a href="https://pixabay.com/" target="_blank">Pixabay</a>
+            , <a href="https://restcountries.eu/" target="_blank">REST Countries</a>
     </footer>
 
     <div class="modal">
         <div id="modal-content" class="modal-content">
+
+            <div class="loader">
+                <div class="lds-default">
+                    <div></div><div></div><div></div><div></div>
+                    <div></div><div></div><div></div><div></div>
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="loader-text">Loading in progress</div>
+            </div>   
             
             <div id="result-trip"></div>
 
@@ -61,15 +82,15 @@
         <div class="modal-curtain"></div>
     </div>
 
-    <!-- <script>
+    <script>
         // Check that service workers are supported
         if ('serviceWorker' in navigator) {
             // Use the window load event to keep the page load performant
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js');
+                navigator.serviceWorker.register('./service-worker.js');
             });
         }
-    </script> -->
+    </script>
     
 </body>
 </html>

@@ -76,11 +76,21 @@ app.post('/set', function (request, response) {
 });
 
 /**
-* @description Add a new variant projectData.
+* @description Deleting data from the projectData.
 */
-app.post('/update', function (request, response) {
-    projectData = [];
-    projectData = request.body;
+app.post('/remove', function (request, response) {
+    let {id} = request.body;    
+    projectData = projectData.filter(item => {
+        return item.id !== id;
+    });
+});
+
+/**
+* @description Changing the done status.
+*/
+app.post('/done', function (request, response) {
+    let {id} = request.body;
+    projectData.find(item => { if (item.id === id) item.done = !item.done; });
 });
 
 /**

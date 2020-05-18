@@ -1,19 +1,27 @@
-# Project Capstone - FEND Capstone - Travel App.
+# Project Capstone - FEND Capstone - Travel Planer App.
 Training project for [Udacity.com]
 
 ### Project Description
-Here will be a description of the project.
+Travel Planer - applications for travel planning. Using the app, 
+you can specify the city for a trip in the future to find out 
+the weather and information about the country where the city is located.
 
 ### Demo
+Heroku Hosting - [Travel Planer]
 
 ### Clone, Install, Development & Start
-
 ```
 // Clone the repository.
+git clone https://github.com/GrafSoul/udacity-project-capstone.git
 
 // Go to the project folder.
+cd udacity-project-capstone
 
 // Code for .env file.
+API_GEO_LOGIN=************************************
+API_WEATHER_KEY=**********************************
+API_PIXABAY_KEY=**********************************
+NODE_ENV=development
 ```
 
 And run the following commands in consle.
@@ -25,7 +33,7 @@ npm install
 npm run dev 
 
 // Creating a set of files for production in the /dist folder.
-npm run prod 
+npm run build 
 
 // Starting local Server and App.
 npm run start 
@@ -36,14 +44,66 @@ npm run test
 
 ### Project structure
 ```
-
+├── /__tests__/                                         // The folder with the files for testing.
+│       ├── .js                                         // Instructions for testing the ********** function.
+│       └── .js                                         // Instructions for testing the ********** function.
+│ 
+├── /src/                                               // Application file folder.
+│       ├── /client/                                    // Folder with the client part of the application.
+│       │       ├── /images/                            // Folder for favicon images.
+│       │       │     ...                               // Favicon icon set.
+│       │       │
+│       │       ├── /media/                             // Folder for weather icons.
+│       │       │     ...                               // Set of weather icons.
+│       │       │
+│       │       ├── /js/                                // Folder for JS files.
+│       │       │     ├── getapi.js                     // Function for getting API data.
+│       │       │     ├── helpers.js                    // Helper functions.
+│       │       │     ├── newtrip.js                    // Function for creating new entries.
+│       │       │     ├── setdata.js                    // Function for sending data to the server.
+│       │       │     └── template.js                   // Template for a new entry
+│       │       │
+│       │       ├── /styles/                            // Folder with styles.
+│       │       │     ├── /componets/                   // Folder with parts of styles.
+│       │       │     │       ├── _base.scss            // Basic styles.
+│       │       │     │       ├── _config.scss          // Config variables.
+│       │       │     │       ├── _footer.scss          // Footer block styles.
+│       │       │     │       ├── _form.scss            // Form block styles.
+│       │       │     │       ├── _header.scss          // Header block styles.
+│       │       │     │       ├── _results.scss         // Results block styles.
+│       │       │     │       └── _resets.scss          // Resets styles.
+│       │       │     └── styles.scss                   // The main file of styles.
+│       │       │
+│       │       ├── /views/                             // Folder for HTML files.
+│       │       │     └── index.html                    // HTML file of the app.
+│       │       │
+│       │       └── index.js                            // Main JS file of the app.
+│       │
+│       └── /server/                                    // Folder of the server part of the application
+│               └── index.js                            // Express server file.
+│
+├── /webpack.config/                                    // Folder with Webpack configuration files.
+│       ├── webpack.dev.js                              // Webpack configuration file for development. 
+│       └── webpack.prod.js                             // Webpack configuration file for production.  
+│
+├── .babelrc                                            // Сonfiguration file for Babel.
+├── .eslintrc.js                                        // Сonfiguration file for Eslint.
+├── .gitignore                                          // File to exclude files and folders.
+├── LICENSE.txt                                         // File with the license text
+├── package-lock.json                                   // Npm configuration file.
+└── package.json                                        // Npm configuration file.
 ```
 
 ### Copyright
-
+The project uses [Geonames], [WeatherBit], [Pixabay] and [REST Countries].
 
 ### License
 Travel App is [MIT licensed].
 
 [Udacity.com]: https://www.udcity.com/
 [MIT licensed]: https://github.com/GrafSoul/udacity-project-capstone/blob/master/LICENSE.txt
+[WeatherBit]: https://www.weatherbit.io/api
+[Geonames]: https://www.geonames.org/
+[Pixabay]: https://pixabay.com/
+[REST Countries]: https://restcountries.eu/
+[Travel Planer]: https://herokuapp.com/

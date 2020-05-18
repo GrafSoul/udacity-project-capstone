@@ -90,20 +90,17 @@ button:focus {
 /* Style for Placeholder Text*/
 input::placeholder {
     font-size: 0.9em;
-    text-align: center;
-    color: $color-p;
+    color: $color-gl;
 }
 
 input:-ms-input-placeholder { 
     font-size: 0.9em;
-    text-align: center;
-    color: $color-p;
+    color: $color-gl;
 }
 
 input::-ms-input-placeholder { 
     font-size: 0.9em;
-    text-align: center;
-    color: $color-p;
+    color: $color-gl;
 }
 
 ::selection {

@@ -1,8 +1,10 @@
+/* eslint-disable no-constant-condition */
 /* eslint-disable no-unused-vars */
 'use strict';
 import { getAPIData } from './getapi';
 import { setData } from './setdata';
-import { definitionTemp, dataToString, msToDate, getDays } from './helpers.js'; 
+import { templateTrip } from './template';
+import { definitionTemp, dataToString, msToDate, getDays } from './helpers.js';
 /**
  * Define Global Variables
 */
@@ -20,6 +22,7 @@ const modalCurtain = document.querySelector('.modal-curtain');
 const modalBtnDelete = document.querySelector('.btn-delete');
 const modalBtnClose = document.querySelector('.btn-cancel');
 const questionDelete = document.querySelector('.question-delete');
+const loader = document.querySelector('.loader');
 
 let dataTrips = [];
 let isModal = false;
@@ -30,11 +33,16 @@ const weatherDataAPI = 'https://api.weatherbit.io/v2.0/forecast/daily?';
 const pixabayDataAPI = 'https://pixabay.com/api/'; 
 const countriesDataAPI = 'https://restcountries.eu/rest/v2/name';     
 
-const routeURL = process.env.NODE_ENV === 'development'? 
-    window.location.href === 'http://localhost:3030/'? 
-        'http://localhost:3030/': 'http://localhost:3030':
+let routeURL = process.env.NODE_ENV === 'development' || 'http://localhost:3030' ?
+    window.location.href === 'http://localhost:3030'? 
+        'http://localhost:3030/': 'http://localhost:3030': 
     window.location.href;
 
+/**
+ * End Global Variables
+ * Begin Main Functions
+ * 
+*/
 /**
 * @description Function for creating a new entry.
 */
@@ -42,10 +50,23 @@ const newTrip = async () => {
     resultTrip.innerHTML = '';
     errorFields.style.display = 'none';
     questionDelete.style.display = 'none';
+    loader.style.display = 'flex';
     modalWindow.classList.add('active');
     isModal = true;
 
     if(cityTrip.value !== '' && dateTrip.value !== '') {
+
+        // Checking and counting the number of days;
+        let dateNowMs = Date.now();
+        let amountDays = getDays(dateNowMs, dateTrip.value);
+        let departWeather = amountDays < 15 ? amountDays : 15; 
+        if (!amountDays) {
+            errorFields.style.display = 'block';
+            errorFields.innerText = 'Enter a date in the future!';
+            dateTrip.value = '';
+            closeModal();
+            return false;
+        }
 
         // Getting API key values from the server.
         let apiData = await getAPIData(`${routeURL}/apidata`);
@@ -55,36 +76,30 @@ const newTrip = async () => {
         let geoUser = `&username=${geoLogin}`;
         let geoURL = geoDataAPI + cityTrip.value + geoUser;
         let geoData = await getAPIData(geoURL);
-        let {lat, lng, name, countryName} = geoData.geonames[0];      
+        if (!geoData.geonames[0]) errorAPIData();
+
+        let {lat, lng, name, countryName} = geoData.geonames[0]; 
 
         // Getting data from the service Weatherbit.io.
-        let dateNowMs = Date.now();
-        let amountDays = getDays(dateNowMs, dateTrip.value);
-        let departWeather = amountDays < 15 ? amountDays : 15; 
-        let weatherDailyURL = '';
-        let weatherData = {};
-        let tempDifference = {};
-
-        if(amountDays) {
-            weatherDailyURL = `${weatherDataAPI}lat=${lat}&lon=${lng}&key=${weatherKey}`;
-            weatherData =  await getAPIData(weatherDailyURL);
-            tempDifference = definitionTemp(weatherData.data);
-        } else {
-            errorFields.style.display = 'block';
-            errorFields.innerText = 'Enter a date in the future!';
-            dateTrip.value = '';
-            return false;
-        }
+        let weatherDailyURL = `${weatherDataAPI}lat=${lat}&lon=${lng}&key=${weatherKey}`;
+        let weatherData =  await getAPIData(weatherDailyURL);
+        if (!weatherData) errorAPIData();
+        let tempDifference = definitionTemp(weatherData.data);
 
         // Getting data from the service Pixabay.com.
         let pixabayURL = `${pixabayDataAPI}?key=${pixabayKey}&q=${name}+${countryName}&image_type=photo`;
         let pixabayData =  await getAPIData(pixabayURL);
+        if (!pixabayData) errorAPIData();
 
         // Getting data from the service Restcountries.eu.
         let restcountriesURL = `${countriesDataAPI}/${countryName}`;
         let restcountriesData =  await getAPIData(restcountriesURL);
+        if (!restcountriesData[0]) errorAPIData();
+
+        loader.style.display = 'none';
+
         let {capital, region, subregion, timezones, population, currencies, languages, flag} = restcountriesData[0];
-        
+
         // Object with data for the new trip.
         let newDataTrip = {
             id: `trip_${dateNowMs}`,
@@ -112,9 +127,10 @@ const newTrip = async () => {
             futureMax: weatherData.data[departWeather].max_temp,
             futureIcon: weatherData.data[departWeather].weather.icon,
             futureDescr: weatherData.data[departWeather].weather.description,
+            done: false
         };
 
-        templateTripResult(newDataTrip, 'result');
+        templateTrip(resultTrip, listTrip, newDataTrip, 'result');
 
         // Clearing the input fields.
         cityTrip.value = '';
@@ -123,83 +139,9 @@ const newTrip = async () => {
     } else {
         errorFields.style.display = 'block';
         errorFields.innerText = 'Enter the city and date in the input fields!';
+        closeModal();
         return false; 
     }
-};
-
-/**
-* @description This function contains a template for a trip entry.
-* @param {object} data - object with data for a new record.
-* @param {string} key - the key entry status.
-*/
-const templateTripResult = (data, key) => {
-
-    let newElement = document.createElement('div');
-    newElement.classList.add('result-content');
-
-    let tripElement = `
-        <div class="result-info">
-            <figure class="info-image">
-                <img src="${data.photo}">
-                <figcaption>City: ${data.city}</figcaption>
-            </figure>
-            <div>Country: ${data.country}</div>
-            <div>Flag: <img src="${data.flag}"></div>
-            <div>Capital: ${data.capital}</div>
-            <div>Population: ${data.population}</div>
-            <div>languages: ${data.languages}</div>
-            <div>Timezones: ${data.timezones}</div>
-            <div>Currencies: ${data.currencies}</div>
-            <div>Region: ${data.region}</div>
-            <div>Subregion: ${data.subregion}</div>
-        </div> 
-
-        <div class="result-trip">
-            <div class="trip-to">May trip to: ${data.city}, ${data.country}</div>
-            <div class="departing">Departing: ${data.departing}</div>
-            <div class="btn-group">
-                <button class="btn save-trip">save trip</button>
-                <button class="btn remove-trip">remove trip</button>
-            </div> 
-
-            <div class="amount">${data.city}, ${data.country} is ${data.amount} days away</div>
-
-            <div class="weather-content">
-                <div class="weather-start">
-                    <h2>Weather now (${data.startDay})</h2>
-                    <div class="weather-icon">
-                        <img src="media/${data.currentIcon}.png" />
-                    </div>
-                    <div class="weather-temp">
-                        <div class="weather-low">Low: ${data.currentMin}</div>
-                        <div class="weather-high">High: ${data.currentMax}</div>
-                    </div>
-                    <div class="weather-descr">${data.currentDescr}</div>
-                </div>
-
-                <div class="weather-start">
-                    <h2>Weather in the future</h2>
-                    <div class="weather-icon">
-                        <img src="media/${data.futureIcon}.png" /> 
-                    </div>
-                    <div class="weather-temp">
-                        <div class="weather-low">Low: ${data.futureMin}</div>
-                        <div class="weather-high">High: ${data.futureMax}</div>
-                    </div>
-                    <div class="weather-descr">${data.futureDescr}</div>
-                </div>
-
-            </div>
-            <div class="weather-range">Temperature range from ${data.minTemp} to  ${data.maxTemp}</div>
-        </div>   
-    `;
-
-    newElement.innerHTML = tripElement;
-    newElement.id = data.id;  
-
-    addHandlerResult(newElement, data, key, data.id);  
-
-    key === 'result' ? resultTrip.append(newElement) : listTrip.prepend(newElement);
 };
 
 /**
@@ -211,7 +153,8 @@ const templateTripResult = (data, key) => {
 const addHandlerResult = (newElement, data, key, id) => {    
 
     let saveButton = newElement.querySelector('.save-trip');
-    let removeButton = newElement.querySelector('.remove-trip'); 
+    let removeButton = newElement.querySelector('.remove-trip');
+    let doneButton = newElement.querySelector('.done-trip');
 
     if(key === 'result') {
         questionDelete.style.display = 'none';
@@ -240,6 +183,10 @@ const addHandlerResult = (newElement, data, key, id) => {
         questionDelete.style.display = 'block';
         saveButton.style.display = 'none';
 
+        doneButton.addEventListener('click', () => {
+            doneEntry(id);
+        });
+
         removeButton.addEventListener('click', () => {
             isDeleted = id;
             toggleModal();
@@ -256,20 +203,47 @@ const deleteEntry = (id) => {
     let trip = document.getElementById(id);
     listTrip.removeChild(trip);
 
-    // Delete data entry from dataEntries.
+    // Delete data entry from dataTrips.
     dataTrips = dataTrips.filter(item => {
         return item.id !== id;
     });
+
     // Updating data on the server.
-    setData(`${routeURL}/update`, dataTrips.reverse());
+    setData(`${routeURL}/remove`, {id});
 
     // Сlear localStorage and add new data.
     localStorage.setItem('trips', JSON.stringify([]));
     localStorage.setItem('trips', JSON.stringify(dataTrips.reverse()));
 
     // Closing the modal window.
-    modalWindow.classList.remove('active');
-    isModal = false;
+    closeModal();
+};
+
+/**
+* @description Function for changing the entry status.
+* @param {number} id - id done entry.
+*/
+const doneEntry = (id) => {
+    dataTrips.find(item => { if (item.id === id) item.done = !item.done; }); 
+ 
+    let element = document.querySelector(`#${id}`);
+    let status = element.classList.contains('done');
+    let btnDone = element.querySelector('.done-trip');
+
+    if (status) {
+        element.classList.remove('done');
+        btnDone.innerText = 'Done';
+    } else {
+        element.classList.add('done');
+        btnDone.innerText = 'Activate';
+    }
+
+    // Updating data on the server.
+    setData(`${routeURL}/done`, {id});
+
+    // Сlear localStorage and add new data.
+    localStorage.setItem('trips', JSON.stringify([]));
+    localStorage.setItem('trips', JSON.stringify(dataTrips.reverse()));
 };
 
 /**
@@ -281,9 +255,10 @@ const getDataLoad = async () => {
 
         // Adding all elements to the page.
         dataTrips.forEach(trip => {
-            templateTripResult(trip, 'list');
+            templateTrip(resultTrip, listTrip, trip, 'list');
         });
         setData(`${routeURL}/set`, dataTrips.reverse());
+
     } else {
         try {
             const res = await fetch(`${routeURL}/get`);
@@ -291,9 +266,10 @@ const getDataLoad = async () => {
 
             // Adding all elements to the page.
             dataTrips.reverse().forEach(trip => {
-                templateTripResult(trip, 'list');
+                templateTrip(resultTrip, listTrip, trip, 'list');
             }); 
-            localStorage.setItem('trips', JSON.stringify(dataTrips.reverse()));           
+            localStorage.setItem('trips', JSON.stringify(dataTrips.reverse()));
+
         } catch(error) {
             console.log('error', error);
         }
@@ -301,18 +277,21 @@ const getDataLoad = async () => {
 };
 
 /**
-* @description Switching the modal window.
+* @description Error message function for getting data.
 */
-const toggleModal= () => {
-    if(isModal) {
-        modalWindow.classList.remove('active');
-        isModal = false;
-    } else {
-        modalWindow.classList.add('active');
-        isModal = true;
-    }
+const errorAPIData = () => {
+    errorFields.style.display = 'block';
+    errorFields.innerText = 'You entered the wrong data!';
+    cityTrip.value = '';
+    closeModal();
+    return false;
 };
 
+/**
+ * End Main Functions
+ * Begin Event listener
+ * 
+*/
 /**
 * @description Event listener for adding a new trip.
 */
@@ -326,19 +305,6 @@ errorFields.addEventListener('mouseover', () => {
 });
 
 /**
-* @description Add Event listeners for close Modal window.
-*/
-modalCurtain.addEventListener('click', () => {
-    modalWindow.classList.remove('active');
-    isModal = false;
-});
-
-modalBtnClose.addEventListener('click', () => {
-    modalWindow.classList.remove('active');
-    isModal = false;
-});
-
-/**
 * @description Add Event listeners for delete entry.
 */
 modalBtnDelete.addEventListener('click', () => {
@@ -346,8 +312,26 @@ modalBtnDelete.addEventListener('click', () => {
 });
 
 /**
+* @description Switching the modal window.
+*/
+const closeModal = () => {
+    modalWindow.classList.remove('active');
+    isModal = false;
+};
+
+const openModal = () => {
+    modalWindow.classList.add('active');
+    isModal = true;
+};
+
+const toggleModal= () => { isModal ? closeModal() : openModal(); };
+
+modalCurtain.addEventListener('click', closeModal);
+modalBtnClose.addEventListener('click', closeModal);
+
+/**
 * @description Function for getting data in load page.
 */
 window.onload = () => getDataLoad();
 
-export {newTrip};
+export {newTrip, addHandlerResult};
