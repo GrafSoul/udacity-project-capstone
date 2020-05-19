@@ -27,11 +27,10 @@ const dataToString = (data, name) => {
 };
 
 /**
-* @description Function for converting time in milliseconds to a date.
-* @param {number} timeMs - time in milliseconds.
+* @description Function for getting the current date.
 * @returns {string} - a formatted string with date.
 */
-const msToDate = () => {
+const getDate = () => {
     let date = new Date();
     let day = date.getDate();
     let numberDay = day > 10 ? day : `0${day}`;
@@ -42,14 +41,14 @@ const msToDate = () => {
 
 /**
 * @description Function for getting the number of days.
-* @param {number} startTime - current date in milliseconds..
-* @param {number} endTime - future date in milliseconds.
-* @returns {number} - number of days from the current date to a future date.
+* @param {number} currentTime - current date in milliseconds.
+* @param {string} endDay - future date.
+* @returns {string} - number of days from the current date to a future date.
 */
-const getDays = (startTime, endTime) => {
-    let depTime = new Date(endTime).getTime();
-    if (depTime > startTime) {
-        let diffTime = depTime - startTime;
+const getDays = (currentTime, endDay) => {
+    let depTime = new Date(endDay).getTime();
+    if (depTime > currentTime) {
+        let diffTime = depTime - currentTime;
         let days = (Math.round((diffTime / 1000 / 60 / 60) * 100) / 100) / 24;
         return days.toFixed(0);
     } else {
@@ -57,4 +56,4 @@ const getDays = (startTime, endTime) => {
     }
 };
 
-export {definitionTemp, dataToString, msToDate, getDays};
+export { definitionTemp, dataToString, getDate, getDays };

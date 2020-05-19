@@ -71,7 +71,12 @@ app.get('/get', function (request, response) {
 /**
 * @description Add a new entry to projectData.
 */
-app.post('/set', function (request, response) {
+app.post('/setnew', function (request, response) {
+    projectData.unshift(request.body);
+});
+
+app.post('/setall', function (request, response) {
+    projectData = [];
     projectData = request.body;
 });
 
@@ -90,7 +95,7 @@ app.post('/remove', function (request, response) {
 */
 app.post('/done', function (request, response) {
     let {id} = request.body;
-    projectData.find(item => { if (item.id === id) item.done = !item.done; });
+    projectData.map(item => { if (item.id === id) item.done = !item.done; });
 });
 
 /**

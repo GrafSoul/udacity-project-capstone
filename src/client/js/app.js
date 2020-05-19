@@ -4,7 +4,7 @@
 import { getAPIData } from './getapi';
 import { setData } from './setdata';
 import { templateTrip } from './template';
-import { definitionTemp, dataToString, msToDate, getDays } from './helpers.js';
+import { definitionTemp, dataToString, getDate, getDays } from './helpers.js';
 /**
  * Define Global Variables
 */
@@ -44,104 +44,108 @@ let routeURL = process.env.NODE_ENV === 'development' || 'http://localhost:3030'
  * 
 */
 /**
-* @description Function for creating a new entry.
+* @description Main function for creating new entries.
 */
-const newTrip = async () => {
-    resultTrip.innerHTML = '';
-    errorFields.style.display = 'none';
-    questionDelete.style.display = 'none';
-    loader.style.display = 'flex';
-    modalWindow.classList.add('active');
-    isModal = true;
+const App = () => {
 
-    if(cityTrip.value !== '' && dateTrip.value !== '') {
-
-        // Checking and counting the number of days;
-        let dateNowMs = Date.now();
-        let amountDays = getDays(dateNowMs, dateTrip.value);
-        let departWeather = amountDays < 15 ? amountDays : 15; 
-        if (!amountDays) {
-            errorFields.style.display = 'block';
-            errorFields.innerText = 'Enter a date in the future!';
+    // Event listener for adding a new trip.
+    getTrip.addEventListener('click', async () => {
+        resultTrip.innerHTML = '';
+        errorFields.style.display = 'none';
+        questionDelete.style.display = 'none';
+        loader.style.display = 'flex';
+        modalWindow.classList.add('active');
+        isModal = true;
+    
+        if(cityTrip.value !== '' && dateTrip.value !== '') {
+    
+            // Checking and counting the number of days;
+            let dateNowMs = Date.now();
+            let amountDays = getDays(dateNowMs, dateTrip.value);
+            let departWeather = amountDays < 15 ? amountDays : 15; 
+            if (!amountDays) {
+                errorFields.style.display = 'block';
+                errorFields.innerText = 'Enter a date in the future!';
+                dateTrip.value = '';
+                closeModal();
+                return false;
+            }
+    
+            // Getting API key values from the server.
+            let apiData = await getAPIData(`${routeURL}/apidata`);
+            let {geoLogin, weatherKey, pixabayKey} = apiData;
+    
+            // Getting data from the service Geonames.org.
+            let geoUser = `&username=${geoLogin}`;
+            let geoURL = geoDataAPI + cityTrip.value + geoUser;
+            let geoData = await getAPIData(geoURL);
+            if (!geoData.geonames[0]) errorAPIData();
+    
+            let {lat, lng, name, countryName} = geoData.geonames[0]; 
+    
+            // Getting data from the service Weatherbit.io.
+            let weatherDailyURL = `${weatherDataAPI}lat=${lat}&lon=${lng}&key=${weatherKey}`;
+            let weatherData =  await getAPIData(weatherDailyURL);
+            if (!weatherData) errorAPIData();
+            let tempDifference = definitionTemp(weatherData.data);
+    
+            // Getting data from the service Pixabay.com.
+            let pixabayURL = `${pixabayDataAPI}?key=${pixabayKey}&q=${name}+${countryName}&image_type=photo`;
+            let pixabayData =  await getAPIData(pixabayURL);
+            if (!pixabayData) errorAPIData();
+    
+            // Getting data from the service Restcountries.eu.
+            let restcountriesURL = `${countriesDataAPI}/${countryName}`;
+            let restcountriesData =  await getAPIData(restcountriesURL);
+            if (!restcountriesData[0]) errorAPIData();
+    
+            loader.style.display = 'none';
+    
+            let {capital, region, subregion, timezones, population, currencies, languages, flag} = restcountriesData[0];
+    
+            // Object with data for the new trip.
+            let newDataTrip = {
+                id: `trip_${dateNowMs}`,
+                city: name, 
+                country: countryName,
+                flag:flag,
+                capital: capital,
+                region: region,
+                subregion: subregion,
+                timezones: timezones.join(', '),
+                population: population,
+                currencies: dataToString(currencies, 'code'),
+                languages: dataToString(languages, 'name'),
+                startDay: getDate(),
+                departing: dateTrip.value.replace(/-/g, '/'),
+                amount: amountDays,
+                photo: pixabayData.hits[0].webformatURL,
+                minTemp: tempDifference.min,
+                maxTemp: tempDifference.max, 
+                currentMin: weatherData.data[0].min_temp,
+                currentMax: weatherData.data[0].max_temp,
+                currentIcon: weatherData.data[0].weather.icon,
+                currentDescr: weatherData.data[0].weather.description,
+                futureMin: weatherData.data[departWeather].min_temp,
+                futureMax: weatherData.data[departWeather].max_temp,
+                futureIcon: weatherData.data[departWeather].weather.icon,
+                futureDescr: weatherData.data[departWeather].weather.description,
+                done: false
+            };
+    
+            templateTrip(resultTrip, listTrip, newDataTrip, 'result');
+    
+            // Clearing the input fields.
+            cityTrip.value = '';
             dateTrip.value = '';
+    
+        } else {
+            errorFields.style.display = 'block';
+            errorFields.innerText = 'Enter the city and date in the input fields!';
             closeModal();
-            return false;
+            return false; 
         }
-
-        // Getting API key values from the server.
-        let apiData = await getAPIData(`${routeURL}/apidata`);
-        let {geoLogin, weatherKey, pixabayKey} = apiData;
-
-        // Getting data from the service Geonames.org.
-        let geoUser = `&username=${geoLogin}`;
-        let geoURL = geoDataAPI + cityTrip.value + geoUser;
-        let geoData = await getAPIData(geoURL);
-        if (!geoData.geonames[0]) errorAPIData();
-
-        let {lat, lng, name, countryName} = geoData.geonames[0]; 
-
-        // Getting data from the service Weatherbit.io.
-        let weatherDailyURL = `${weatherDataAPI}lat=${lat}&lon=${lng}&key=${weatherKey}`;
-        let weatherData =  await getAPIData(weatherDailyURL);
-        if (!weatherData) errorAPIData();
-        let tempDifference = definitionTemp(weatherData.data);
-
-        // Getting data from the service Pixabay.com.
-        let pixabayURL = `${pixabayDataAPI}?key=${pixabayKey}&q=${name}+${countryName}&image_type=photo`;
-        let pixabayData =  await getAPIData(pixabayURL);
-        if (!pixabayData) errorAPIData();
-
-        // Getting data from the service Restcountries.eu.
-        let restcountriesURL = `${countriesDataAPI}/${countryName}`;
-        let restcountriesData =  await getAPIData(restcountriesURL);
-        if (!restcountriesData[0]) errorAPIData();
-
-        loader.style.display = 'none';
-
-        let {capital, region, subregion, timezones, population, currencies, languages, flag} = restcountriesData[0];
-
-        // Object with data for the new trip.
-        let newDataTrip = {
-            id: `trip_${dateNowMs}`,
-            city: name, 
-            country: countryName,
-            flag:flag,
-            capital: capital,
-            region: region,
-            subregion: subregion,
-            timezones: timezones.join(', '),
-            population: population,
-            currencies: dataToString(currencies, 'code'),
-            languages: dataToString(languages, 'name'),
-            startDay: msToDate(),
-            departing: dateTrip.value.replace(/-/g, '/'),
-            amount: amountDays,
-            photo: pixabayData.hits[0].webformatURL,
-            minTemp: tempDifference.min,
-            maxTemp: tempDifference.max, //
-            currentMin: weatherData.data[0].min_temp,
-            currentMax: weatherData.data[0].max_temp,
-            currentIcon: weatherData.data[0].weather.icon,
-            currentDescr: weatherData.data[0].weather.description,
-            futureMin: weatherData.data[departWeather].min_temp,
-            futureMax: weatherData.data[departWeather].max_temp,
-            futureIcon: weatherData.data[departWeather].weather.icon,
-            futureDescr: weatherData.data[departWeather].weather.description,
-            done: false
-        };
-
-        templateTrip(resultTrip, listTrip, newDataTrip, 'result');
-
-        // Clearing the input fields.
-        cityTrip.value = '';
-        dateTrip.value = '';
-
-    } else {
-        errorFields.style.display = 'block';
-        errorFields.innerText = 'Enter the city and date in the input fields!';
-        closeModal();
-        return false; 
-    }
+    });
 };
 
 /**
@@ -164,7 +168,7 @@ const addHandlerResult = (newElement, data, key, id) => {
             dataTrips.unshift(data);
 
             // Sending updated data to the server.
-            setData(`${routeURL}/set`, dataTrips);
+            setData(`${routeURL}/setnew`, data);
 
             // Adding new data to LocalStorage.
             localStorage.setItem('trips', JSON.stringify(dataTrips));
@@ -213,7 +217,7 @@ const deleteEntry = (id) => {
 
     // Сlear localStorage and add new data.
     localStorage.setItem('trips', JSON.stringify([]));
-    localStorage.setItem('trips', JSON.stringify(dataTrips.reverse()));
+    localStorage.setItem('trips', JSON.stringify(dataTrips));
 
     // Closing the modal window.
     closeModal();
@@ -224,9 +228,10 @@ const deleteEntry = (id) => {
 * @param {number} id - id done entry.
 */
 const doneEntry = (id) => {
+    
     dataTrips.find(item => { if (item.id === id) item.done = !item.done; }); 
  
-    let element = document.querySelector(`#${id}`);
+    let element = document.getElementById(id);
     let status = element.classList.contains('done');
     let btnDone = element.querySelector('.done-trip');
 
@@ -243,7 +248,7 @@ const doneEntry = (id) => {
 
     // Сlear localStorage and add new data.
     localStorage.setItem('trips', JSON.stringify([]));
-    localStorage.setItem('trips', JSON.stringify(dataTrips.reverse()));
+    localStorage.setItem('trips', JSON.stringify(dataTrips));
 };
 
 /**
@@ -257,7 +262,8 @@ const getDataLoad = async () => {
         dataTrips.forEach(trip => {
             templateTrip(resultTrip, listTrip, trip, 'list');
         });
-        setData(`${routeURL}/set`, dataTrips.reverse());
+        
+        setData(`${routeURL}/setall`, dataTrips.reverse());
 
     } else {
         try {
@@ -268,6 +274,7 @@ const getDataLoad = async () => {
             dataTrips.reverse().forEach(trip => {
                 templateTrip(resultTrip, listTrip, trip, 'list');
             }); 
+
             localStorage.setItem('trips', JSON.stringify(dataTrips.reverse()));
 
         } catch(error) {
@@ -292,11 +299,6 @@ const errorAPIData = () => {
  * Begin Event listener
  * 
 */
-/**
-* @description Event listener for adding a new trip.
-*/
-getTrip.addEventListener('click', newTrip);
-
 /**
 * @description Event listener for city and date input field error informer.
 */
@@ -334,4 +336,4 @@ modalBtnClose.addEventListener('click', closeModal);
 */
 window.onload = () => getDataLoad();
 
-export {newTrip, addHandlerResult};
+export { App, addHandlerResult };

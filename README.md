@@ -6,6 +6,11 @@ Travel Planer - applications for travel planning. Using the app,
 you can specify the city for a trip in the future to find out 
 the weather and information about the country where the city is located.
 
+### Additional function
+* Country information (name, capital, region, population, languages, currency...).
+* Added weather icons.
+* Implemented the status of entries (active, done).
+
 ### Demo
 Heroku Hosting - [Travel Planer]
 
@@ -45,8 +50,8 @@ npm run test
 ### Project structure
 ```
 ├── /__tests__/                                         // The folder with the files for testing.
-│       ├── .js                                         // Instructions for testing the ********** function.
-│       └── .js                                         // Instructions for testing the ********** function.
+│       ├── getapi.spec.js                              // Instructions for testing the getAPIData() function.
+│       └── helpers.spec.js                             // Instructions for testing helpers functions.
 │ 
 ├── /src/                                               // Application file folder.
 │       ├── /client/                                    // Folder with the client part of the application.
@@ -57,9 +62,9 @@ npm run test
 │       │       │     ...                               // Set of weather icons.
 │       │       │
 │       │       ├── /js/                                // Folder for JS files.
-│       │       │     ├── getapi.js                     // Function for getting API data.
+│       │       │     ├── app.js                        // Main functions for creating new entries.
 │       │       │     ├── helpers.js                    // Helper functions.
-│       │       │     ├── newtrip.js                    // Function for creating new entries.
+│       │       │     ├── getapi.js                     // Function for getting API data.
 │       │       │     ├── setdata.js                    // Function for sending data to the server.
 │       │       │     └── template.js                   // Template for a new entry
 │       │       │

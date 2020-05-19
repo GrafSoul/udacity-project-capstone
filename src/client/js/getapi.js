@@ -12,4 +12,4 @@ const getAPIData = async (url) => {
     } catch(error) {console.log('Error API Data:', error);}
 };
 
-export {getAPIData};
+export { getAPIData };

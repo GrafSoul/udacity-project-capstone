@@ -1,10 +1,12 @@
 'use strict';
-import { newTrip } from './js/newtrip';
+import { App } from './js/app';
 import { getAPIData } from './js/getapi';
 import { setData } from './js/setdata';
 import { templateTrip } from './js/template';
-import {definitionTemp, dataToString, msToDate, getDays} from './js/helpers.js'; 
+import { definitionTemp, dataToString, getDate, getDays } from './js/helpers.js'; 
+
+App();
 
 import './styles/styles.scss';
 
-export { newTrip, getAPIData, setData, templateTrip, getDays, msToDate, definitionTemp, dataToString };
+export { App, getAPIData, setData, templateTrip, getDays, getDate, definitionTemp, dataToString };

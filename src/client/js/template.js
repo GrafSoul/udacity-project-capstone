@@ -1,11 +1,13 @@
 'use strict';
+import { addHandlerResult } from './app';
+
 /**
 * @description This function contains a template for a trip entry.
+* @param {Node} resultTrip -element to pages for displaying a new entry.
+* @param {Node} listTrip - element to pages for displaying a list of entries.
 * @param {object} data - object with data for a new record.
 * @param {string} key - the key entry status.
 */
-import { addHandlerResult } from './newtrip';
-
 const templateTrip = (resultTrip, listTrip, data, key) => {
 
     let newElement = document.createElement('div');

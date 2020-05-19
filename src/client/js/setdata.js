@@ -21,4 +21,4 @@ const setData = async (url = '', data = {}) => {
     } catch(error) {console.log('Error installing data on the server: ', error);}
 };
 
-export {setData};
+export { setData };
