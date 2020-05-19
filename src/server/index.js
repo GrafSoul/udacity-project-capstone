@@ -105,15 +105,15 @@ const port = process.env.NODE_ENV === 'development' ? 3030 : process.env.PORT ;
 app.listen(port, listening);
 
 function listening() {
-    console.log('*************************************');
-    console.log(` Your Login in Geoname is: ${apiData.geoLogin}`);
-    console.log(` Your API Key WeatherBit is:\n ${apiData.weatherKey}`);
-    console.log(` Your API Key Pixabay is:\n ${apiData.pixabayKey}`);
+    console.log('***********************************************************');
+    console.log(` Login in Geoname is: ${apiData.geoLogin}`);
+    console.log(` API Key WeatherBit is: ${apiData.weatherKey}`);
+    console.log(` API Key Pixabay is: ${apiData.pixabayKey}`);
     console.log(' Server started Successfully!');
     console.log(` Running on - http://localhost:${port}'`);
-    console.log('=====================================');
+    console.log('===========================================================');
     console.log(' To stop the server, Press - Ctrl+C');
-    console.log('*************************************');
+    console.log('***********************************************************');
 }
 
 module.exports = app;

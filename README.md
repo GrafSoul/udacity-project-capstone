@@ -1,8 +1,8 @@
-# Project Capstone - FEND Capstone - Travel Planer App.
+# Project Capstone - FEND Capstone - Travel Planner App.
 Training project for [Udacity.com]
 
 ### Project Description
-Travel Planer - applications for travel planning. Using the app, 
+Travel Planner - applications for travel planning. Using the app, 
 you can specify the city for a trip in the future to find out 
 the weather and information about the country where the city is located.
 
@@ -12,7 +12,7 @@ the weather and information about the country where the city is located.
 * Implemented the status of entries (active, done).
 
 ### Demo
-Heroku Hosting - [Travel Planer]
+Heroku Hosting - [Travel Planner]
 
 ### Clone, Install, Development & Start
 ```
@@ -103,7 +103,7 @@ npm run test
 The project uses [Geonames], [WeatherBit], [Pixabay] and [REST Countries].
 
 ### License
-Travel App is [MIT licensed].
+Travel Planner App is [MIT licensed].
 
 [Udacity.com]: https://www.udcity.com/
 [MIT licensed]: https://github.com/GrafSoul/udacity-project-capstone/blob/master/LICENSE.txt
@@ -111,4 +111,4 @@ Travel App is [MIT licensed].
 [Geonames]: https://www.geonames.org/
 [Pixabay]: https://pixabay.com/
 [REST Countries]: https://restcountries.eu/
-[Travel Planer]: https://herokuapp.com/
+[Travel Planner]: https://traplan.herokuapp.com/

@@ -1,7 +1,7 @@
 {
   "name": "udacity-project-capstone",
   "version": "1.0.0",
-  "description": "Project: Front End Developer Capstone - Travel App",
+  "description": "Project: Front End Developer Capstone - Travel Planner App",
   "main": "src/server/index.js",
   "scripts": {
     "wp-server": "webpack-dev-server --config webpack.config/webpack.dev.js --open",
