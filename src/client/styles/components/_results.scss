@@ -256,6 +256,10 @@
 .modal-content {
     padding: 0;
     max-width: 980px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border-radius: 8px;
     background-color: $color-w;
     border: 1px solid $color-gl;

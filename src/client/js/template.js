@@ -78,8 +78,10 @@ const templateTrip = (resultTrip, listTrip, data, key) => {
     newElement.id = data.id;
     if(data.done) newElement.classList.add('done');
 
+    // Adding event listeners to buttons in the new entry.
     addHandlerResult(newElement, data, key, data.id);
 
+    // Adding an entry to the page in a modal window or list.
     key === 'result' ? resultTrip.append(newElement) : listTrip.prepend(newElement);
 };
 

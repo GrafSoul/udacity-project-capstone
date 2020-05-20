@@ -28,10 +28,11 @@ let dataTrips = [];
 let isModal = false;
 let isDeleted = '';
 
+const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 const geoDataAPI = 'http://api.geonames.org/searchJSON?q=';
 const weatherDataAPI = 'https://api.weatherbit.io/v2.0/forecast/daily?'; 
 const pixabayDataAPI = 'https://pixabay.com/api/'; 
-const countriesDataAPI = 'https://restcountries.eu/rest/v2/name';     
+const countriesDataAPI = 'https://restcountries.eu/rest/v2/name';
 
 let routeURL = process.env.NODE_ENV === 'development' || 'http://localhost:3030' ?
     window.location.href === 'http://localhost:3030'? 
@@ -56,9 +57,9 @@ const App = () => {
         loader.style.display = 'flex';
         modalWindow.classList.add('active');
         isModal = true;
-    
+
         if(cityTrip.value !== '' && dateTrip.value !== '') {
-    
+
             // Checking and counting the number of days;
             let dateNowMs = Date.now();
             let amountDays = getDays(dateNowMs, dateTrip.value);
@@ -70,39 +71,38 @@ const App = () => {
                 closeModal();
                 return false;
             }
-    
+
             // Getting API key values from the server.
             let apiData = await getAPIData(`${routeURL}/apidata`);
             let {geoLogin, weatherKey, pixabayKey} = apiData;
-    
+
             // Getting data from the service Geonames.org.
             let geoUser = `&username=${geoLogin}`;
             let geoURL = geoDataAPI + cityTrip.value + geoUser;
-            let geoData = await getAPIData(geoURL);
-            if (!geoData.geonames[0]) errorAPIData();
-    
+            let geoData = await getAPIData(proxyUrl + geoURL);
+            if (!geoData.geonames[0]) errorAPIData();    
             let {lat, lng, name, countryName} = geoData.geonames[0]; 
-    
+
             // Getting data from the service Weatherbit.io.
             let weatherDailyURL = `${weatherDataAPI}lat=${lat}&lon=${lng}&key=${weatherKey}`;
             let weatherData =  await getAPIData(weatherDailyURL);
             if (!weatherData) errorAPIData();
             let tempDifference = definitionTemp(weatherData.data);
-    
+
             // Getting data from the service Pixabay.com.
             let pixabayURL = `${pixabayDataAPI}?key=${pixabayKey}&q=${name}+${countryName}&image_type=photo`;
             let pixabayData =  await getAPIData(pixabayURL);
             if (!pixabayData) errorAPIData();
-    
+
             // Getting data from the service Restcountries.eu.
             let restcountriesURL = `${countriesDataAPI}/${countryName}`;
             let restcountriesData =  await getAPIData(restcountriesURL);
-            if (!restcountriesData[0]) errorAPIData();
-    
-            loader.style.display = 'none';
-    
+            if (!restcountriesData[0]) errorAPIData();     
             let {capital, region, subregion, timezones, population, currencies, languages, flag} = restcountriesData[0];
-    
+
+            // Hiding the preloader when data is loaded.
+            loader.style.display = 'none';
+
             // Object with data for the new trip.
             let newDataTrip = {
                 id: `trip_${dateNowMs}`,
@@ -132,14 +132,16 @@ const App = () => {
                 futureDescr: weatherData.data[departWeather].weather.description,
                 done: false
             };
-    
+
+            // Passing data to the template for the new entry.
             templateTrip(resultTrip, listTrip, newDataTrip, 'result');
-    
+
             // Clearing the input fields.
             cityTrip.value = '';
             dateTrip.value = '';
-    
+
         } else {
+            // Adds an error if the input fields are incorrectly filled in.
             errorFields.style.display = 'block';
             errorFields.innerText = 'Enter the city and date in the input fields!';
             closeModal();
@@ -153,8 +155,9 @@ const App = () => {
 * @param {Node} newElement - new entry Node element.
 * @param {object} data - object with data for a new record.
 * @param {string} key - the key entry status.
+* @param {string} id - id of the element to create.
 */
-const addHandlerResult = (newElement, data, key, id) => {    
+const addHandlerResult = async (newElement, data, key, id) => {
 
     let saveButton = newElement.querySelector('.save-trip');
     let removeButton = newElement.querySelector('.remove-trip');
@@ -163,7 +166,21 @@ const addHandlerResult = (newElement, data, key, id) => {
     if(key === 'result') {
         questionDelete.style.display = 'none';
 
-        saveButton.addEventListener('click', () => {       
+        // Event listener for the 'Done' button.
+        doneButton.addEventListener('click', () => {
+            doneEntry(id);
+        });
+
+        // Event listener for the 'Remove Trip' button.
+        removeButton.addEventListener('click', () => {
+            questionDelete.style.display = 'block';
+            resultTrip.innerHTML = '';
+            isDeleted = id;
+            toggleModal();
+        });
+
+        // Event listener for the 'Save Trip' button.
+        saveButton.addEventListener('click', () => {
             // Adding new data a global variable.
             dataTrips.unshift(data);
 
@@ -174,23 +191,21 @@ const addHandlerResult = (newElement, data, key, id) => {
             localStorage.setItem('trips', JSON.stringify(dataTrips));
 
             resultTrip.innerHTML = '';
-            listTrip.innerHTML = '';
-            getDataLoad();
+            saveButton.style.display = 'none';
+            listTrip.prepend(newElement);
             toggleModal();
         });
 
-        removeButton.addEventListener('click', () => {
-            resultTrip.innerHTML = '';            
-            toggleModal();
-        });
     } else {
         questionDelete.style.display = 'block';
         saveButton.style.display = 'none';
 
+        // Event listener for the 'Done' button in the list.
         doneButton.addEventListener('click', () => {
             doneEntry(id);
         });
 
+        // Event listener for the 'Remove Trip' button in the list.
         removeButton.addEventListener('click', () => {
             isDeleted = id;
             toggleModal();
@@ -230,11 +245,13 @@ const deleteEntry = (id) => {
 const doneEntry = (id) => {
     
     dataTrips.find(item => { if (item.id === id) item.done = !item.done; }); 
- 
+
     let element = document.getElementById(id);
     let status = element.classList.contains('done');
     let btnDone = element.querySelector('.done-trip');
 
+    // Changing the appearance of the entry 
+    // and the text on the button.
     if (status) {
         element.classList.remove('done');
         btnDone.innerText = 'Done';
@@ -262,8 +279,10 @@ const getDataLoad = async () => {
         dataTrips.forEach(trip => {
             templateTrip(resultTrip, listTrip, trip, 'list');
         });
-        
-        setData(`${routeURL}/setall`, dataTrips.reverse());
+
+        // Updating data on the server.
+        let data = dataTrips.reverse();        
+        setData(`${routeURL}/setall`, {data});
 
     } else {
         try {
@@ -275,6 +294,7 @@ const getDataLoad = async () => {
                 templateTrip(resultTrip, listTrip, trip, 'list');
             }); 
 
+            // Adding new data to the local storage.
             localStorage.setItem('trips', JSON.stringify(dataTrips.reverse()));
 
         } catch(error) {

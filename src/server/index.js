@@ -76,8 +76,9 @@ app.post('/setnew', function (request, response) {
 });
 
 app.post('/setall', function (request, response) {
+    let {data} = request.body;
     projectData = [];
-    projectData = request.body;
+    projectData = data;
 });
 
 /**

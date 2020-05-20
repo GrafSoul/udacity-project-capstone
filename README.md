@@ -29,7 +29,7 @@ API_PIXABAY_KEY=**********************************
 NODE_ENV=development
 ```
 
-And run the following commands in consle.
+And run the following commands in console.
 ```
 // Installing npm modules.
 npm install
@@ -111,4 +111,4 @@ Travel Planner App is [MIT licensed].
 [Geonames]: https://www.geonames.org/
 [Pixabay]: https://pixabay.com/
 [REST Countries]: https://restcountries.eu/
-[Travel Planner]: https://traplan.herokuapp.com/
+[Travel Planner]: https://trapl.herokuapp.com/

@@ -6,6 +6,7 @@
 * @returns {array} - array of objects to store on the server.
 */
 const setData = async (url = '', data = {}) => {
+
     const response = await fetch(url, {
         method: 'POST',
         credentials: 'same-origin',
