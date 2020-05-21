@@ -1,5 +1,7 @@
 # Project Capstone - FEND Capstone - Travel Planner App.
-Training project for [Udacity.com]
+Training project for [Udacity.com]. Certificate Nanodegree Program - [Front End Web Developer]
+
+<img src="./prototype/certificate.svg" alt="Certificate Udacity" width="600" />
 
 ### Project Description
 Travel Planner - applications for travel planning. Using the app, 
@@ -103,7 +105,7 @@ npm run test
 The project uses [Geonames], [WeatherBit], [Pixabay] and [REST Countries].
 
 ### License
-Travel Planner App is [MIT licensed].
+© 2020 Travel Planner App is [MIT licensed].
 
 [Udacity.com]: https://www.udcity.com/
 [MIT licensed]: https://github.com/GrafSoul/udacity-project-capstone/blob/master/LICENSE.txt
@@ -112,3 +114,5 @@ Travel Planner App is [MIT licensed].
 [Pixabay]: https://pixabay.com/
 [REST Countries]: https://restcountries.eu/
 [Travel Planner]: https://trapl.herokuapp.com/
+
+[Front End Web Developer]: https://confirm.udacity.com/7QM9HD6
